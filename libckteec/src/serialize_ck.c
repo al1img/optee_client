@@ -187,13 +187,10 @@ static CK_RV serialize_ck_attribute(struct serializer *obj, CK_ATTRIBUTE *attr)
 	/* Attributes which data value do not need conversion (aside ulong) */
 	default:
 		if (ck_attr_is_ulong(attr->type)) {
-			CK_ULONG ck_ulong = 0;
-
-			if (attr->ulValueLen < sizeof(CK_ULONG))
+			if (attr->ulValueLen < sizeof(pkcs11_data32))
 				return CKR_ATTRIBUTE_TYPE_INVALID;
 
-			memcpy(&ck_ulong, attr->pValue, sizeof(ck_ulong));
-			pkcs11_data32 = ck_ulong;
+			memcpy(&pkcs11_data32, attr->pValue, sizeof(pkcs11_data32));
 			pkcs11_pdata = &pkcs11_data32;
 			pkcs11_size = sizeof(uint32_t);
 		} else {
